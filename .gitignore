@@ -1,0 +1,24 @@
+# Go build files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go vendor folder
+vendor/
+
+# Go workspace settings (Go 1.18+)
+go.work
+go.work.sum
+
+# Configuration files and environment settings
+*.env
+
+# Ignore IDE project files and configuration files
+*.iml
+.idea/
+.vscode/
+*.code-workspace
