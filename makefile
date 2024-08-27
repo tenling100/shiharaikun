@@ -13,6 +13,10 @@ PROTO_FILES := $(wildcard $(PROTO_SRC_DIR)/*.proto)
 
 
 ## Database configuration
+# Variables for paths
+MIGRATE_SCRIPT = cmd/migrate/main.go
+MIGRATE_BIN = migrate
+
 # Define service name
 DB_SERVICE_NAME = test-mysql
 
@@ -43,8 +47,6 @@ install-tools:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
-# Phony targets to prevent conflicts with file names
-.PHONY: all generate clean install-tools
 
 # Start the MySQL service using Docker Compose
 start-db:
@@ -61,8 +63,6 @@ stop-db:
 # Initialize the test database schema
 init-db:
 	@echo "Initializing test database schema..."
-	# Wait for MySQL to be ready (increase sleep time if needed)
-	@sleep 10
 	# Run SQL commands to initialize schema
 	# This command uses mysql client to execute a schema.sql script
 	docker-compose -f $(DOCKER_COMPOSE_FILE) exec $(DB_SERVICE_NAME) \
@@ -85,3 +85,15 @@ test:
 	# Stop the DB after tests
 	make stop-db
 	@echo "Tests completed."
+
+# Target to build the migration binary
+build-migrate:
+	@echo "Building migration binary..."
+	go build -o $(MIGRATE_BIN) $(MIGRATE_SCRIPT)
+	@echo "Migration binary built successfully."
+
+# Target to run the migration binary
+migrate-db:
+	@echo "Running database migration..."
+	./$(MIGRATE_BIN)
+	@echo "Database migration completed."

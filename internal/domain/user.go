@@ -1,5 +1,11 @@
 package domain
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 // User represents a user entity in the system
 type User struct {
 	gorm.Model

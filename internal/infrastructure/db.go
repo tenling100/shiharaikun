@@ -1,5 +1,19 @@
 package infrastructure
 
+import (
+	"errors"
+	"fmt"
+	"log"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
+
+	"github.com/tenling100/shiharaikun/internal/config"
+	"github.com/tenling100/shiharaikun/internal/domain"
+)
+
 var DB *gorm.DB
 
 const (
@@ -7,7 +21,7 @@ const (
 	maxOpenConns = 100
 )
 
-func InitializeDB(env config.Env) error {
+func InitializeDB(env *config.Env) error {
 
 	dns := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -38,19 +52,21 @@ func InitializeDB(env config.Env) error {
 	sqlDB.SetMaxIdleConns(maxIdleConns)
 	sqlDB.SetMaxOpenConns(maxOpenConns)
 
-	// Migrate the schema
-	err = autoMigrate()
-	if err != nil {
-		log.Fatalf("failed to migrate database: %v", err)
-		return err
-	}
 	return nil
 }
 
-func autoMigrate() error {
+func AutoMigrate() error {
+	if DB == nil {
+		log.Fatalf("failed to migrate database: DB is nil")
+		return errors.New("DB is nil")
+	}
 	err := DB.AutoMigrate(
-		&model.User{},
-		&model.Invoice{},
+		&domain.ClientBankAccount{},
+		&domain.Client{},
+		&domain.Company{},
+		&domain.InvoiceData{},
+		&domain.Invoice{},
+		&domain.User{},
 	)
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
@@ -60,6 +76,10 @@ func autoMigrate() error {
 }
 
 func CloseDB() error {
+	if DB == nil {
+		log.Fatalf("failed to close database: DB is nil")
+		return errors.New("DB is nil")
+	}
 	sqlDB, err := DB.DB()
 	if err != nil {
 		log.Fatalf("failed to get DB instance: %v", err)
