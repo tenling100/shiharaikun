@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package invoice;
+
+option go_package = "github.com/tenling100/shiharaikun/api";
+
+// Invoice service definitions
+service InvoiceService {
+    rpc CreateInvoice (InvoiceRequest) returns (InvoiceResponse);
+    rpc GetInvoicesByDateRange (DateRangeRequest) returns (InvoicesResponse);
+}
+
+message InvoiceRequest {
+    int32 id = 1;
+    double amount = 2;
+    string due_date = 3;
+}
+
+message InvoiceResponse {
+    string message = 1;
+}
+
+message DateRangeRequest {
+    string start_date = 1;
+    string end_date = 2;
+}
+
+message InvoicesResponse {
+    repeated Invoice invoices = 1;
+}
+
+message Invoice {
+    int32 id = 1;
+    double amount = 2;
+    string due_date = 3;
+    string created_at = 4;
+}
