@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: test-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+    ports:
+      - "3306:3306"
+    networks:
+      - test-net
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test-app
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: testuser
+      DB_PASSWORD: testpassword
+      DB_NAME: testdb
+    depends_on:
+      - mysql
+    networks:
+      - test-net
+    ports:
+      - "8080:8080"  # Adjust this if your app runs on a different port
+
+networks:
+  test-net:
+
+volumes:
+  mysql-data:
