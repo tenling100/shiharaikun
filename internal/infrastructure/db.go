@@ -23,16 +23,17 @@ const (
 
 func InitializeDB(env *config.Env) error {
 
-	dns := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		env.DBHost,
-		env.DBPort,
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		env.DBUser,
 		env.DBPass,
+		env.DBHost,
+		env.DBPort,
 		env.DBName,
 	)
 
-	DB, err := gorm.Open(mysql.Open(dns), &gorm.Config{
+	var err error
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},

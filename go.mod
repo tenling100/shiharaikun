@@ -1,6 +1,8 @@
 module github.com/tenling100/shiharaikun
 
-go 1.19
+go 1.21
+
+toolchain go1.23.0
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0

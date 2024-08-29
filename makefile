@@ -16,6 +16,7 @@ PROTO_FILES := $(wildcard $(PROTO_SRC_DIR)/*.proto)
 # Variables for paths
 MIGRATE_SCRIPT = cmd/migrate/main.go
 MIGRATE_BIN = migrate
+SCHEMA_FILE = db/schema.sql
 
 # Define service name
 DB_SERVICE_NAME = test-mysql
@@ -27,6 +28,8 @@ DOCKER_COMPOSE_FILE = docker-compose.yml
 DB_USER = testuser
 DB_PASSWORD = testpassword
 DB_NAME = testdb
+DB_HOST = 127.0.0.1
+DB_PORT = 3306
 
 # Default target
 all: generate
@@ -97,3 +100,10 @@ migrate-db:
 	@echo "Running database migration..."
 	./$(MIGRATE_BIN)
 	@echo "Database migration completed."
+
+# Target to dump the current database schema into schema.sql
+dump-schema:
+	@echo "Dumping database schema to $(SCHEMA_FILE)..."
+	mysqldump -h $(DB_HOST) -P $(DB_PORT) -u$(DB_USER) -p$(DB_PASSWORD) \
+	          --no-data --compact --skip-set-charset --skip-comments --no-tablespaces --skip-triggers --skip-routines $(DB_NAME) > $(SCHEMA_FILE)
+	@echo "Database schema dumped to $(SCHEMA_FILE)."
