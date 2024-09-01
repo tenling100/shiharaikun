@@ -5,28 +5,26 @@ import (
 	"github.com/tenling100/shiharaikun/internal/repository"
 )
 
-type invoiceUseCaseImpl struct {
+type invoiceUsecaseImpl struct {
 	companyRepository     repository.CompanyRepository
 	invoiceDataRepository repository.InvoiceDataRepository
 }
 
-func NewInvoiceUseCaseImpl(
+func NewInvoiceUsecaseImpl(
 	companyRepository repository.CompanyRepository,
 	invoiceDataRepository repository.InvoiceDataRepository,
 ) InvoiceUseCase {
-	return &invoiceUseCaseImpl{
+	return &invoiceUsecaseImpl{
 		companyRepository:     companyRepository,
 		invoiceDataRepository: invoiceDataRepository,
 	}
 }
 
 // CreateInvoice creates a new invoice.
-func (u *invoiceUseCaseImpl) CreateInvoice(invoice *domain.InvoiceData) error {
+func (u *invoiceUsecaseImpl) CreateInvoice(invoice *domain.InvoiceData) error {
 	err := u.invoiceDataRepository.CreateInvoiceData(invoice)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-
-// GetInvoiceByUserID retrieves an invoice by its user ID.

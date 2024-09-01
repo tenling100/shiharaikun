@@ -1,15 +1,18 @@
 package domain
 
-import "time"
+import (
+	"time"
 
-// Company represents a company entity
+	_ "gorm.io/gorm"
+)
+
 type Company struct {
 	ID             uint      `gorm:"primaryKey"`
-	Name           string    `gorm:"type:varchar(100);not null" validate:"required,max=100"`
-	Representative string    `gorm:"type:varchar(100);not null" validate:"required,max=100"`
-	Phone          string    `gorm:"type:varchar(20);not null" validate:"required,e164"`
-	PostalCode     string    `gorm:"type:varchar(10);not null" validate:"required,len=10"`
-	Address        string    `gorm:"type:varchar(255);not null" validate:"required,max=255"`
-	CreateAt       time.Time `gorm:"autoCreateTime"`
+	Name           string    `gorm:"type:varchar(100);not null"`
+	Representative string    `gorm:"type:varchar(100);not null"`
+	Phone          string    `gorm:"type:varchar(20);not null"`
+	PostalCode     string    `gorm:"type:varchar(20);not null"`
+	Address        string    `gorm:"type:varchar(255);not null"`
+	CreatedAt      time.Time `gorm:"autoCreateTime"`
 	UpdatedAt      time.Time `gorm:"autoUpdateTime"`
 }

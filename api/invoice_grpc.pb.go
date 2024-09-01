@@ -21,6 +21,8 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	InvoiceService_CreateInvoice_FullMethodName          = "/invoice.InvoiceService/CreateInvoice"
 	InvoiceService_GetInvoicesByDateRange_FullMethodName = "/invoice.InvoiceService/GetInvoicesByDateRange"
+	InvoiceService_CreateCompany_FullMethodName          = "/invoice.InvoiceService/CreateCompany"
+	InvoiceService_CreateUser_FullMethodName             = "/invoice.InvoiceService/CreateUser"
 )
 
 // InvoiceServiceClient is the client API for InvoiceService service.
@@ -31,6 +33,8 @@ const (
 type InvoiceServiceClient interface {
 	CreateInvoice(ctx context.Context, in *InvoiceRequest, opts ...grpc.CallOption) (*InvoiceResponse, error)
 	GetInvoicesByDateRange(ctx context.Context, in *DateRangeRequest, opts ...grpc.CallOption) (*InvoicesResponse, error)
+	CreateCompany(ctx context.Context, in *Company, opts ...grpc.CallOption) (*Company, error)
+	CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 }
 
 type invoiceServiceClient struct {
@@ -61,6 +65,26 @@ func (c *invoiceServiceClient) GetInvoicesByDateRange(ctx context.Context, in *D
 	return out, nil
 }
 
+func (c *invoiceServiceClient) CreateCompany(ctx context.Context, in *Company, opts ...grpc.CallOption) (*Company, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Company)
+	err := c.cc.Invoke(ctx, InvoiceService_CreateCompany_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *invoiceServiceClient) CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, InvoiceService_CreateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InvoiceServiceServer is the server API for InvoiceService service.
 // All implementations must embed UnimplementedInvoiceServiceServer
 // for forward compatibility.
@@ -69,6 +93,8 @@ func (c *invoiceServiceClient) GetInvoicesByDateRange(ctx context.Context, in *D
 type InvoiceServiceServer interface {
 	CreateInvoice(context.Context, *InvoiceRequest) (*InvoiceResponse, error)
 	GetInvoicesByDateRange(context.Context, *DateRangeRequest) (*InvoicesResponse, error)
+	CreateCompany(context.Context, *Company) (*Company, error)
+	CreateUser(context.Context, *User) (*User, error)
 	mustEmbedUnimplementedInvoiceServiceServer()
 }
 
@@ -84,6 +110,12 @@ func (UnimplementedInvoiceServiceServer) CreateInvoice(context.Context, *Invoice
 }
 func (UnimplementedInvoiceServiceServer) GetInvoicesByDateRange(context.Context, *DateRangeRequest) (*InvoicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInvoicesByDateRange not implemented")
+}
+func (UnimplementedInvoiceServiceServer) CreateCompany(context.Context, *Company) (*Company, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCompany not implemented")
+}
+func (UnimplementedInvoiceServiceServer) CreateUser(context.Context, *User) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
 func (UnimplementedInvoiceServiceServer) mustEmbedUnimplementedInvoiceServiceServer() {}
 func (UnimplementedInvoiceServiceServer) testEmbeddedByValue()                        {}
@@ -142,6 +174,42 @@ func _InvoiceService_GetInvoicesByDateRange_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _InvoiceService_CreateCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Company)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InvoiceServiceServer).CreateCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InvoiceService_CreateCompany_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InvoiceServiceServer).CreateCompany(ctx, req.(*Company))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InvoiceService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InvoiceServiceServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InvoiceService_CreateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InvoiceServiceServer).CreateUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // InvoiceService_ServiceDesc is the grpc.ServiceDesc for InvoiceService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -156,6 +224,14 @@ var InvoiceService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetInvoicesByDateRange",
 			Handler:    _InvoiceService_GetInvoicesByDateRange_Handler,
+		},
+		{
+			MethodName: "CreateCompany",
+			Handler:    _InvoiceService_CreateCompany_Handler,
+		},
+		{
+			MethodName: "CreateUser",
+			Handler:    _InvoiceService_CreateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

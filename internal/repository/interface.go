@@ -5,7 +5,6 @@ import "github.com/tenling100/shiharaikun/internal/domain"
 type UserRepository interface {
 	CreateUser(user *domain.User) error
 	GetUserByEmail(email string) (*domain.User, error)
-	CheckUserPassword(user *domain.User, password string) bool
 }
 
 type CompanyRepository interface {

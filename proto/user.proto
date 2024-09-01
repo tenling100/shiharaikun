@@ -6,44 +6,44 @@ option go_package = "github.com/tenling100/shiharaikun/api";
 
 // User service definitions
 service UserService {
-    rpc CreateUser (CreateUserRequest) returns (UserResponse);
-    rpc GetUserById (GetUserIdRequest) returns (UserResponse);
-    rpc Login (LoginRequest) returns (LoginResponse);
-    rpc Logout (LogoutRequest) returns (LogoutResponse);
+  rpc CreateUser(CreateUserRequest) returns (UserResponse);
+  rpc GetUserById(GetUserIdRequest) returns (UserResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
 }
 
 message CreateUserRequest {
-    int32 id = 1;
-    string name = 2;
-    string email = 3;
-       string password = 4;
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
 }
 
 message UserResponse {
-    int32 id = 1;
-    string name = 2;
-    string email = 3;
-    string created_at = 4;
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string created_at = 4;
 }
 
 message GetUserIdRequest {
-    int32 id = 1;
+  int32 id = 1;
 }
 
 message LoginRequest {
-       string id=1;
-       string name=2;
-       string password=3;
-   }
+  string id = 1;
+  string name = 2;
+  string password = 3;
+}
 
 message LoginResponse {
-       string status=1;
-   }
+  string status = 1;
+}
 
 message LogoutRequest {
-    string id=1;
+  string id = 1;
 }
 
 message LogoutResponse {
-    string status=1;
+  string status = 1;
 }
