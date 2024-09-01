@@ -41,8 +41,6 @@ func (s *InvoiceServer) CreateInvoice(ctx context.Context, in *pb.InvoiceRequest
 	}, nil
 }
 
-func (s *InvoiceServer) GetInvoicesByDateRange(ctx context.Context, in *pb.DateRangeRequest) (*pb.InvoicesResponse, error) {\
-	invoice, err := s.invoiceUsecase.GetInvoicesByDateRange(in.Start.AsTime(), in.End.AsTime())
-	
+func (s *InvoiceServer) GetInvoicesByDateRange(ctx context.Context, in *pb.DateRangeRequest) (*pb.InvoicesResponse, error) {
 	return nil, nil
 }
