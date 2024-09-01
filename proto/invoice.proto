@@ -42,8 +42,8 @@ message InvoiceResponse {
 }
 
 message DateRangeRequest {
-  string start_date = 1;
-  string end_date = 2;
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
 }
 
 message InvoicesResponse {

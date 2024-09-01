@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=mock/mock.go -source=interface.go
 package repository
 
 import "github.com/tenling100/shiharaikun/internal/domain"
@@ -18,4 +19,5 @@ type InvoiceDataRepository interface {
 	CreateInvoiceData(invoiceData *domain.InvoiceData) error
 	GetInvoiceDataByID(id uint) (*domain.InvoiceData, error)
 	UpdateInvoiceData(invoiceData *domain.InvoiceData) error
+	GetInvoicesByDateRange(startDate, endDate string) ([]domain.InvoiceData, error)
 }

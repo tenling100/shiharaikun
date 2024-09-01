@@ -32,3 +32,13 @@ func (r *invoiceDataRepository) GetInvoiceDataByID(id uint) (*domain.InvoiceData
 func (r *invoiceDataRepository) UpdateInvoiceData(invoiceData *domain.InvoiceData) error {
 	return r.db.Save(invoiceData).Error
 }
+
+// GetInvoicesByDateRange retrieves invoices by date range.
+func (r *invoiceDataRepository) GetInvoicesByDateRange(startDate, endDate string) ([]domain.InvoiceData, error) {
+	var invoices []domain.InvoiceData
+	err := r.db.Where("issue_date BETWEEN ? AND ?", startDate, endDate).Find(&invoices).Error
+	if err != nil {
+		return nil, err
+	}
+	return invoices, nil
+}

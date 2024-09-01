@@ -55,3 +55,23 @@ func (u *invoiceUsecaseImpl) CreateInvoice(invoice *domain.InvoiceData) error {
 
 	return nil
 }
+
+func (u *invoiceUsecaseImpl) GetInvoicesByDateRange(startDate, endDate string) ([]domain.InvoiceData, error) {
+	invoices, err := u.invoiceDataRepository.GetInvoicesByDateRange(startDate, endDate)
+	if err != nil {
+		return nil, err
+	}
+	for i := range invoices {
+		company, err := u.companyRepository.GetCompanyByID(invoices[i].CompanyID)
+		if err != nil {
+			return nil, err
+		}
+		client, err := u.companyRepository.GetCompanyByID(invoices[i].ClientID)
+		if err != nil {
+			return nil, err
+		}
+		invoices[i].Company = company
+		invoices[i].Client = client
+	}
+	return invoices, nil
+}
