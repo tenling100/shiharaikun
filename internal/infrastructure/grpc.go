@@ -32,12 +32,10 @@ func NewGRPCServer(
 
 func (s *server) Run(
 	invoiceServer *interface_grpc.InvoiceServer,
-	//userServer pb.UserServiceServer,
 ) error {
 	log.Default().Println("Starting GRPC server on port " + s.env.GRPCPort)
 
 	pb.RegisterInvoiceServiceServer(s.server, invoiceServer)
-	//pb.RegisterUserServiceServer(s.server, userServer)
 
 	reflection.Register(s.server)
 
