@@ -25,14 +25,6 @@ func (r *invoiceDataRepository) GetInvoiceDataByID(id uint) (*domain.InvoiceData
 	if err != nil {
 		return nil, err
 	}
-	err = r.db.Model(&invoiceData).Association("company").Find(&invoiceData.Company)
-	if err != nil {
-		return nil, err
-	}
-	err = r.db.Model(&invoiceData).Association("client").Find(&invoiceData.Client)
-	if err != nil {
-		return nil, err
-	}
 	return &invoiceData, nil
 }
 

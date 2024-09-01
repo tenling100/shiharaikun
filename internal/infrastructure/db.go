@@ -55,10 +55,8 @@ func InitializeDB(env *config.Env) (*gorm.DB, error) {
 func AutoMigrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
 		&domain.ClientBankAccount{},
-		&domain.Client{},
 		&domain.Company{},
 		&domain.InvoiceData{},
-		&domain.Invoice{},
 		&domain.User{},
 	)
 	if err != nil {

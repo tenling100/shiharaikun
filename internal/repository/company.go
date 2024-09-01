@@ -26,14 +26,6 @@ func (r *companyRepository) GetCompanyByID(id uint) (*domain.Company, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = r.db.Model(&company).Association("Clients").Find(&company.Clients)
-	if err != nil {
-		return nil, err
-	}
-	err = r.db.Model(&company).Association("Invoices").Find(&company.Invoices)
-	if err != nil {
-		return nil, err
-	}
 	return &company, nil
 }
 

@@ -14,17 +14,6 @@ type CompanyRepository interface {
 	UpdateCompany(company *domain.Company) error
 }
 
-type ClientRepository interface {
-	CreateClient(client *domain.Client) error
-	GetClientByID(id uint) (*domain.Client, error)
-	UpdateClient(client *domain.Client) error
-}
-
-type InvoiceRepository interface {
-	CreateInvoice(invoice *domain.Invoice) error
-	GetInvoiceByID(id uint) (*domain.Invoice, error)
-}
-
 type InvoiceDataRepository interface {
 	CreateInvoiceData(invoiceData *domain.InvoiceData) error
 	GetInvoiceDataByID(id uint) (*domain.InvoiceData, error)

@@ -26,10 +26,6 @@ func (r *userRepository) GetUserByEmail(email string) (*domain.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = r.db.Model(&user).Association("Company").Find(&user.Company)
-	if err != nil {
-		return nil, err
-	}
 	return &user, nil
 }
 

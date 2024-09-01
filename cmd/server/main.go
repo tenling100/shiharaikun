@@ -28,8 +28,10 @@ func main() {
 	// close db connection
 	defer infrastructure.CloseDB(db)
 
-	invoiceRepository := repository.NewInvoiceRepository(db)
-	invoiceUseCase := usecase.NewInvoiceUseCaseImpl(invoiceRepository)
+	invoiceDataRepository := repository.NewInvoiceDataRepository(db)
+	companyRepository := repository.NewCompanyRepository(db)
+	//userRepository := repository.NewUserRepository(db)
+	invoiceUseCase := usecase.NewInvoiceUseCaseImpl(companyRepository, invoiceDataRepository)
 	invoiceServer := grpc.NewInvoiceServer(invoiceUseCase)
 
 	// run grpc server

@@ -1,66 +1,26 @@
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `client` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
-  `company_id` bigint unsigned NOT NULL,
-  `company_name` varchar(100) NOT NULL,
-  `representative` varchar(100) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `postal_code` varchar(10) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_client_deleted_at` (`deleted_at`),
-  KEY `fk_company_clients` (`company_id`),
-  CONSTRAINT `fk_company_clients` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client_bank_account` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
-  `client_id` bigint unsigned NOT NULL,
+  `company_id` bigint unsigned NOT NULL,
   `bank_name` varchar(100) NOT NULL,
   `branch_name` varchar(100) NOT NULL,
   `account_number` varchar(20) NOT NULL,
   `account_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_client_bank_account_deleted_at` (`deleted_at`),
-  KEY `fk_client_bank_accounts` (`client_id`),
-  CONSTRAINT `fk_client_bank_accounts` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `company` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
   `name` varchar(100) NOT NULL,
   `representative` varchar(100) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `postal_code` varchar(10) NOT NULL,
   `address` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_company_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `invoice` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `status` enum('unpaid','paid','overdue') DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `repay_date` datetime(3) DEFAULT NULL,
-  `created_at` datetime(3) DEFAULT NULL,
+  `create_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -68,9 +28,6 @@ CREATE TABLE `invoice` (
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoice_data` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
   `company_id` bigint unsigned NOT NULL,
   `client_id` bigint unsigned NOT NULL,
   `issue_date` datetime(3) NOT NULL,
@@ -82,30 +39,21 @@ CREATE TABLE `invoice_data` (
   `invoice_amount` decimal(10,2) NOT NULL,
   `payment_due_date` datetime(3) NOT NULL,
   `status` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_invoice_data_deleted_at` (`deleted_at`),
-  KEY `fk_company_invoices` (`company_id`),
-  KEY `fk_client_invoices` (`client_id`),
-  CONSTRAINT `fk_client_invoices` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
-  CONSTRAINT `fk_company_invoices` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
   `username` varchar(191) NOT NULL,
   `email` varchar(191) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `company_id` bigint unsigned DEFAULT NULL,
+  `company_id` bigint unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uni_user_email` (`email`),
   UNIQUE KEY `uni_user_username` (`username`),
-  KEY `idx_user_deleted_at` (`deleted_at`),
-  KEY `fk_user_company` (`company_id`),
-  CONSTRAINT `fk_user_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+  UNIQUE KEY `uni_user_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
