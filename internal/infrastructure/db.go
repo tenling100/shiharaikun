@@ -14,15 +14,12 @@ import (
 	"github.com/tenling100/shiharaikun/internal/domain"
 )
 
-var DB *gorm.DB
-
 const (
 	maxIdleConns = 10
 	maxOpenConns = 100
 )
 
-func InitializeDB(env *config.Env) error {
-
+func InitializeDB(env *config.Env) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		env.DBUser,
@@ -32,8 +29,7 @@ func InitializeDB(env *config.Env) error {
 		env.DBName,
 	)
 
-	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -41,27 +37,23 @@ func InitializeDB(env *config.Env) error {
 	})
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
-		return err
+		return nil, err
 	}
 
 	sqlDB, err := DB.DB()
 	if err != nil {
 		log.Fatalf("failed to get DB instance: %v", err)
-		return err
+		return nil, err
 	}
 
 	sqlDB.SetMaxIdleConns(maxIdleConns)
 	sqlDB.SetMaxOpenConns(maxOpenConns)
 
-	return nil
+	return DB, nil
 }
 
-func AutoMigrate() error {
-	if DB == nil {
-		log.Fatalf("failed to migrate database: DB is nil")
-		return errors.New("DB is nil")
-	}
-	err := DB.AutoMigrate(
+func AutoMigrate(db *gorm.DB) error {
+	err := db.AutoMigrate(
 		&domain.ClientBankAccount{},
 		&domain.Client{},
 		&domain.Company{},
@@ -76,12 +68,12 @@ func AutoMigrate() error {
 	return nil
 }
 
-func CloseDB() error {
-	if DB == nil {
+func CloseDB(db *gorm.DB) error {
+	if db == nil {
 		log.Fatalf("failed to close database: DB is nil")
 		return errors.New("DB is nil")
 	}
-	sqlDB, err := DB.DB()
+	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatalf("failed to get DB instance: %v", err)
 		return err

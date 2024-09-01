@@ -2,35 +2,47 @@ package grpc
 
 import (
 	"context"
-	"time"
+	"fmt"
 
 	pb "github.com/tenling100/shiharaikun/api"
 	"github.com/tenling100/shiharaikun/internal/domain"
 	"github.com/tenling100/shiharaikun/internal/usecase"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type invoiceServer struct {
+type InvoiceServer struct {
 	invoiceUsecase usecase.InvoiceUseCase
+	pb.UnimplementedInvoiceServiceServer
 }
 
-func NewInvoiceServer(invoiceUsecase *usecase.InvoiceUseCase) *invoiceServer {
-	return &invoiceServer{
-		invoiceUsecase: *invoiceUsecase,
+func NewInvoiceServer(invoiceUsecase usecase.InvoiceUseCase) *InvoiceServer {
+	return &InvoiceServer{
+		invoiceUsecase: invoiceUsecase,
 	}
 }
 
-func (s *invoiceServer) CreateInvoice(ctx context.Context, in *pb.InvoiceRequest) (*pb.InvoiceResponse, error) {
+func (s *InvoiceServer) CreateInvoice(ctx context.Context, in *pb.InvoiceRequest) (*pb.InvoiceResponse, error) {
 	invoice := &domain.Invoice{
-		Status:    in.invoice.Status,
-		Amount:    in.invoice.Amount,
-		RepayDate: in.invoice.RepayDate,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Status:    in.Status.String(),
+		Amount:    uint64(in.Amount),
+		RepayDate: in.RepaymentDate.AsTime(),
 	}
-	err := s.invoiceUsecase.CreateInvoice(in.Invoice)
-	return nil, nil
+	err := s.invoiceUsecase.CreateInvoice(invoice)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.InvoiceResponse{
+		Invoice: &pb.Invoice{
+			Id:            fmt.Sprint(invoice.ID),
+			Status:        pb.InvoiceStatus(pb.InvoiceStatus_value[invoice.Status]),
+			Amount:        uint64(invoice.Amount),
+			RepaymentDate: timestamppb.New(invoice.RepayDate),
+		},
+	}, nil
 }
 
-func (s *invoiceServer) GetInvoicesByDateRange(ctx context.Context, in *pb.DateRangeRequest) (*pb.InvoicesResponse, error) {
+func (s *InvoiceServer) GetInvoicesByDateRange(ctx context.Context, in *pb.DateRangeRequest) (*pb.InvoicesResponse, error) {\
+	invoice, err := s.invoiceUsecase.GetInvoicesByDateRange(in.Start.AsTime(), in.End.AsTime())
+	
 	return nil, nil
 }

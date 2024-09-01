@@ -1,8 +1,11 @@
 # Use the official Golang image as a base
 FROM golang:1.23-alpine
 
+# Install make utility
+RUN apk add --no-cache make
+
 # Set the Current Working Directory inside the container
-WORKDIR /app
+WORKDIR /shiharaikun
 
 # Copy go.mod and go.sum files
 COPY go.mod go.sum ./
@@ -14,10 +17,10 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o main .
+RUN make build-server
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["./main"]
+CMD ["./server"]

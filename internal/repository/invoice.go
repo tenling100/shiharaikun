@@ -16,6 +16,7 @@ func NewInvoiceRepository(db *gorm.DB) *invoiceRepository {
 
 // CreateInvoice creates a new invoice.
 func (r *invoiceRepository) CreateInvoice(invoice *domain.Invoice) error {
+
 	return r.db.Create(invoice).Error
 }
 

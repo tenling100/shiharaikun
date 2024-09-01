@@ -9,12 +9,13 @@ type InvoiceUseCaseImpl struct {
 	InvoiceRepository repository.InvoiceRepository
 }
 
-func NewInvoiceUseCaseImpl(invoiceRepository repository.InvoiceRepository) *InvoiceUseCaseImpl {
+func NewInvoiceUseCaseImpl(invoiceRepository repository.InvoiceRepository) InvoiceUseCase {
 	return &InvoiceUseCaseImpl{InvoiceRepository: invoiceRepository}
 }
 
 // CreateInvoice creates a new invoice.
 func (u *InvoiceUseCaseImpl) CreateInvoice(invoice *domain.Invoice) error {
-
 	return u.InvoiceRepository.CreateInvoice(invoice)
 }
+
+// GetInvoiceByUserID retrieves an invoice by its user ID.

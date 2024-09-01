@@ -6,19 +6,21 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	pb "github.com/tenling100/shiharaikun/api"
 	"github.com/tenling100/shiharaikun/internal/config"
+	interface_grpc "github.com/tenling100/shiharaikun/internal/interface/grpc"
 )
 
 type server struct {
 	server *grpc.Server
-	env    config.Env
+	env    *config.Env
 }
 
 func NewGRPCServer(
 	ctx context.Context,
-	env config.Env,
+	env *config.Env,
 ) *server {
 	grpcServer := grpc.NewServer()
 
@@ -29,13 +31,15 @@ func NewGRPCServer(
 }
 
 func (s *server) Run(
-	invoiceServer pb.InvoiceServiceServer,
-	userServer pb.UserServiceServer,
+	invoiceServer *interface_grpc.InvoiceServer,
+	//userServer pb.UserServiceServer,
 ) error {
 	log.Default().Println("Starting GRPC server on port " + s.env.GRPCPort)
 
 	pb.RegisterInvoiceServiceServer(s.server, invoiceServer)
-	pb.RegisterUserServiceServer(s.server, userServer)
+	//pb.RegisterUserServiceServer(s.server, userServer)
+
+	reflection.Register(s.server)
 
 	lis, err := net.Listen("tcp", ":"+s.env.GRPCPort)
 	if err != nil {
@@ -47,4 +51,9 @@ func (s *server) Run(
 		return err
 	}
 	return nil
+}
+
+func (s *server) Shutdown() {
+	log.Default().Println("Shutting down GRPC server")
+	s.server.GracefulStop()
 }

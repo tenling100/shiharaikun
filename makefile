@@ -11,6 +11,16 @@ PROTOC_GEN_GO_GRPC := $(shell go env GOPATH)/bin/protoc-gen-go-grpc
 # List all the proto files to compile
 PROTO_FILES := $(wildcard $(PROTO_SRC_DIR)/*.proto)
 
+BUF := buf
+PROTO_DIR = ./proto/
+
+# Define variables for Docker
+IMAGE_NAME = go-grpc-server
+CONTAINER_NAME = go-grpc-server-container
+DOCKER_PORT = 50051
+
+# Define variables for Docker Compose
+COMPOSE_FILE = docker-compose.yml
 
 ## Database configuration
 # Variables for paths
@@ -31,9 +41,6 @@ DB_NAME = testdb
 DB_HOST = 127.0.0.1
 DB_PORT = 3306
 
-# Default target
-all: generate
-
 # Generate Go code from proto files
 generate: $(PROTO_FILES)
 	@for proto in $(PROTO_FILES); do \
@@ -43,6 +50,11 @@ generate: $(PROTO_FILES)
 				  --go-grpc_out=module=github.com/tenling100/shiharaikun/api:$(PROTO_DST_DIR) \
 		          $$proto; \
 	done
+
+proto-fmt:
+	@echo "Formatting proto files..."
+	$(BUF) format -w $(PROTO_DIR)
+	@echo "Proto files formatted."
 
 # Install required tools
 install-tools:
@@ -72,6 +84,12 @@ init-db:
 	bash -c "mysql -u $(DB_USER) -p$(DB_PASSWORD) $(DB_NAME) < /path/to/schema.sql"
 	@echo "Test database schema initialized."
 
+renew-db:
+	@echo "Renewing database: $(DB_NAME)"
+	@mysql -u $(DB_USER) -p$(DB_PASS) -h $(DB_HOST) -e "DROP DATABASE IF EXISTS $(DB_NAME);"
+	@mysql -u $(DB_USER) -p$(DB_PASS) -h $(DB_HOST) -e "CREATE DATABASE $(DB_NAME);"
+	@echo "Database $(DB_NAME) has been renewed."
+
 # Clean test environment
 clean:
 	@echo "Cleaning up test environment..."
@@ -89,11 +107,53 @@ test:
 	make stop-db
 	@echo "Tests completed."
 
+# build the binary
+build-server:
+	@echo "Building server binary..."
+	go build -o server cmd/server/main.go
+	@echo "Server binary built successfully."
+
 # Target to build the migration binary
 build-migrate:
 	@echo "Building migration binary..."
 	go build -o $(MIGRATE_BIN) $(MIGRATE_SCRIPT)
 	@echo "Migration binary built successfully."
+
+# Run the Go server
+run: build
+	@echo "Running the Go server..."
+	./server
+
+# Build Docker image
+docker-build:
+	@echo "Building Docker image..."
+	docker build -t $(IMAGE_NAME) .
+	@echo "Docker image built: $(IMAGE_NAME)"
+
+# Run Docker container
+docker-run: docker-build
+	@echo "Running Docker container..."
+	docker run -d --name $(CONTAINER_NAME) -p $(DOCKER_PORT):$(DOCKER_PORT) $(IMAGE_NAME)
+	@echo "Docker container running: $(CONTAINER_NAME)"
+
+# Stop Docker container
+docker-stop:
+	@echo "Stopping Docker container..."
+	docker stop $(CONTAINER_NAME) || true
+	docker rm $(CONTAINER_NAME) || true
+	@echo "Docker container stopped and removed: $(CONTAINER_NAME)"
+
+# Start services using Docker Compose
+compose-up:
+	@echo "Starting services with Docker Compose..."
+	docker-compose -f $(COMPOSE_FILE) up -d
+	@echo "Services started."
+
+# Stop services using Docker Compose
+compose-down:
+	@echo "Stopping services with Docker Compose..."
+	docker-compose -f $(COMPOSE_FILE) down
+	@echo "Services stopped and removed."
 
 # Target to run the migration binary
 migrate-db:

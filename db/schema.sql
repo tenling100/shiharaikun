@@ -55,16 +55,13 @@ CREATE TABLE `company` (
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoice` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `deleted_at` datetime(3) DEFAULT NULL,
   `status` enum('unpaid','paid','overdue') DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
   `repay_date` datetime(3) DEFAULT NULL,
-  `create_at` datetime(3) DEFAULT NULL,
-  `update_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_invoice_deleted_at` (`deleted_at`)
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -105,8 +102,8 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL,
   `company_id` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uni_user_username` (`username`),
   UNIQUE KEY `uni_user_email` (`email`),
+  UNIQUE KEY `uni_user_username` (`username`),
   KEY `idx_user_deleted_at` (`deleted_at`),
   KEY `fk_user_company` (`company_id`),
   CONSTRAINT `fk_user_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)

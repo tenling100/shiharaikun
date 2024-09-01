@@ -13,13 +13,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load environment variables: %v", err)
 	}
-	err = infrastructure.InitializeDB(env)
+	db, err := infrastructure.InitializeDB(env)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+	defer infrastructure.CloseDB(db)
 
 	// Auto-migrate the schema for all related models
-	err = infrastructure.AutoMigrate()
+	err = infrastructure.AutoMigrate(db)
 	if err != nil {
 		log.Fatalf("Failed to migrate database schema: %v", err)
 	}
