@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
 	pb "github.com/tenling100/shiharaikun/api"
@@ -30,8 +31,49 @@ func NewInvoiceServer(
 }
 
 func (s *InvoiceServer) CreateInvoice(ctx context.Context, in *pb.InvoiceRequest) (*pb.InvoiceResponse, error) {
+	invoice := &domain.InvoiceData{
+		CompanyID:      uint(in.CompanyId),
+		ClientID:       uint(in.ClientId),
+		IssueDate:      in.IssueDate.AsTime(),
+		InvoiceAmount:  float64(in.InvoiceAmount),
+		Status:         in.Status.String(),
+		PaymentDueDate: in.PaymentDueDate.AsTime(),
+	}
 
-	return nil, nil
+	err := s.invoiceUsecase.CreateInvoice(invoice)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.InvoiceResponse{
+		Invoice: &pb.Invoice{
+			Id: wrapperspb.UInt64(uint64(invoice.ID)),
+			Company: &pb.Company{
+				Id:             wrapperspb.UInt64(uint64(invoice.CompanyID)),
+				Name:           invoice.Company.Name,
+				Representative: invoice.Company.Representative,
+				Phone:          invoice.Company.Phone,
+				PostalCode:     invoice.Company.PostalCode,
+				Address:        invoice.Company.Address,
+			},
+			Client: &pb.Company{
+				Id:         wrapperspb.UInt64(uint64(invoice.ClientID)),
+				Name:       invoice.Client.Name,
+				Phone:      invoice.Client.Phone,
+				PostalCode: invoice.Client.PostalCode,
+				Address:    invoice.Client.Address,
+			},
+			IssueDate:      timestamppb.New(invoice.IssueDate),
+			PaymentAmount:  float32(invoice.PaymentAmount),
+			Fee:            float32(invoice.Fee),
+			FeeRate:        float32(invoice.FeeRate),
+			Tax:            float32(invoice.Tax),
+			TaxRate:        float32(invoice.TaxRate),
+			InvoiceAmount:  float32(invoice.InvoiceAmount),
+			PaymentDueDate: timestamppb.New(invoice.PaymentDueDate),
+			Status:         pb.InvoiceStatus(pb.InvoiceStatus_value[invoice.Status]),
+		},
+	}, nil
 }
 
 func (s *InvoiceServer) GetInvoicesByDateRange(ctx context.Context, in *pb.DateRangeRequest) (*pb.InvoicesResponse, error) {

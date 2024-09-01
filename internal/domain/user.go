@@ -13,7 +13,7 @@ type User struct {
 	Email     string    `gorm:"unique;not null" validate:"required,email"`
 	Password  string    `gorm:"type:varchar(255);not null"validate:"required,min=8"`
 	CompanyID uint      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Company   Company   `gorm:"foreignKey:CompanyID;"`
+	Company   *Company  `gorm:"foreignKey:CompanyID;"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }

@@ -10,9 +10,9 @@ import (
 type InvoiceData struct {
 	ID             uint      `gorm:"primaryKey"`                                     // Unique identifier
 	CompanyID      uint      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Foreign key linking to the Company model
-	Company        Company   `gorm:"foreignKey:CompanyID"`                           // Company associated with the invoice
+	Company        *Company  `gorm:"foreignKey:CompanyID"`                           // Company associated with the invoice
 	ClientID       uint      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Foreign key linking to the Client model
-	Client         Company   `gorm:"foreignKey:ClientID"`                            //
+	Client         *Company  `gorm:"foreignKey:ClientID"`                            //
 	IssueDate      time.Time `gorm:"not null"`                                       // Date when the invoice was issued
 	PaymentAmount  float64   `gorm:"type:decimal(10,2);not null"`                    // Total payment amount
 	Fee            float64   `gorm:"type:decimal(10,2)"`                             // Fee associated with the invoice

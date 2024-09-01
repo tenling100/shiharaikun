@@ -31,7 +31,7 @@ func main() {
 	invoiceDataRepository := repository.NewInvoiceDataRepository(db)
 	companyRepository := repository.NewCompanyRepository(db)
 	userRepository := repository.NewUserRepository(db)
-	invoiceUseCase := usecase.NewInvoiceUsecaseImpl(companyRepository, invoiceDataRepository)
+	invoiceUseCase := usecase.NewInvoiceUsecaseImpl(invoiceDataRepository, companyRepository, userRepository, env)
 	companyUseCase := usecase.NewCompanyUsecaseImpl(companyRepository)
 	userUseCase := usecase.NewUserUsecaseImpl(userRepository)
 	invoiceServer := grpc.NewInvoiceServer(invoiceUseCase, companyUseCase, userUseCase)

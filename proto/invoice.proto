@@ -28,12 +28,13 @@ enum InvoiceStatus {
 
 message InvoiceRequest {
   string id = 1;
-  string company_id = 2;
-  string creator_id = 3;
-  google.protobuf.Timestamp issue_date = 4;
-  float invoice_amount = 5;
-  google.protobuf.Timestamp payment_due_date = 6;
-  InvoiceStatus status = 7;
+  uint64 company_id = 2;
+  uint64 creator_id = 3;
+  uint64 client_id = 4;
+  google.protobuf.Timestamp issue_date = 5;
+  float invoice_amount = 6;
+  google.protobuf.Timestamp payment_due_date = 7;
+  InvoiceStatus status = 8;
 }
 
 message InvoiceResponse {
