@@ -6,6 +6,7 @@ toolchain go1.23.0
 
 require (
 	github.com/go-sql-driver/mysql v1.7.0
+	github.com/golang/mock v1.6.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	google.golang.org/grpc v1.66.0
 	google.golang.org/protobuf v1.34.2
