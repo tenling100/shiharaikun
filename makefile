@@ -33,7 +33,7 @@ MIGRATE_BIN = migrate
 SCHEMA_FILE = db/schema.sql
 
 # Define service name
-DB_SERVICE_NAME = test-mysql
+DB_SERVICE_NAME = mysql
 
 # Define Docker Compose file
 DOCKER_COMPOSE_FILE = docker-compose.yml
@@ -67,7 +67,7 @@ proto-doc:
 	@for proto in $(PROTO_FILES); do \
         echo "Generating documentation for $$proto"; \
         $(PROTOC) -I=$(PROTO_SRC_DIR) -I=$(GOOGLE_APIS_PATH) \
-                  --doc_out=$(PROTO_DST_DIR) --doc_opt=markdown,$(basename $(notdir $$proto)).md \
+                  --doc_out=$(PROTO_DST_DIR) --doc_opt=markdown,README.md \
                   $$proto; \
     done
 	@echo "Documentation generated."
@@ -87,21 +87,6 @@ start-db:
 	@echo "Starting MySQL test database..."
 	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d $(DB_SERVICE_NAME)
 	@echo "MySQL test database started."
-
-# Stop and remove the MySQL service
-stop-db:
-	@echo "Stopping MySQL test database..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down
-	@echo "MySQL test database stopped and removed."
-
-# Initialize the test database schema
-init-db:
-	@echo "Initializing test database schema..."
-	# Run SQL commands to initialize schema
-	# This command uses mysql client to execute a schema.sql script
-	docker-compose -f $(DOCKER_COMPOSE_FILE) exec $(DB_SERVICE_NAME) \
-	bash -c "mysql -u $(DB_USER) -p$(DB_PASSWORD) $(DB_NAME) < /path/to/schema.sql"
-	@echo "Test database schema initialized."
 
 renew-db:
 	@echo "Renewing database: $(DB_NAME)"
