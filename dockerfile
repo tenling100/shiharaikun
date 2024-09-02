@@ -30,4 +30,4 @@ COPY wait-for-mysql.sh /wait-for-mysql.sh
 RUN chmod +x /wait-for-mysql.sh
 
 # Command to run the executable
-CMD ["/wait-for-mysql.sh", "./main"]
+CMD ["/wait-for-mysql.sh", "./server"]
