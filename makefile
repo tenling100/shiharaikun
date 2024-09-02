@@ -7,6 +7,9 @@ PROTO_DST_DIR := ./api
 PROTOC := protoc
 PROTOC_GEN_GO := $(shell go env GOPATH)/bin/protoc-gen-go
 PROTOC_GEN_GO_GRPC := $(shell go env GOPATH)/bin/protoc-gen-go-grpc
+PROTOC_GEN_GRPC_GATEWAY := $(shell go env GOPATH)/bin/protoc-gen-grpc-gateway
+PROTOC_GEN_OPENAPIV2 := $(shell go env GOPATH)/bin/protoc-gen-openapiv2
+PROTOC_GEN_DOC := $(shell go env GOPATH)/bin/protoc-gen-doc
 GOOGLE_APIS_PATH := ./third_party/googleapis
 
 # List all the proto files to compile
@@ -59,6 +62,16 @@ proto-fmt:
 	$(BUF) format -w $(PROTO_DIR)
 	@echo "Proto files formatted."
 
+proto-doc:
+	@echo "Generating documentation for proto files..."
+	@for proto in $(PROTO_FILES); do \
+        echo "Generating documentation for $$proto"; \
+        $(PROTOC) -I=$(PROTO_SRC_DIR) -I=$(GOOGLE_APIS_PATH) \
+                  --doc_out=$(PROTO_DST_DIR) --doc_opt=markdown,$(basename $(notdir $$proto)).md \
+                  $$proto; \
+    done
+	@echo "Documentation generated."
+
 # Install required tools
 install-tools:
 	@echo "Installing Protobuf tools"
@@ -66,6 +79,7 @@ install-tools:
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+	go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 
 
 # Start the MySQL service using Docker Compose
