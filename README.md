@@ -34,7 +34,7 @@ ShiharaiKun is a Go-based application designed to manage invoice data for future
 
 3. **Install Go Modules:**
    ```bash
-   go mod vendor
+   go mod download
    ```
 
 4. **Build the Application:**
