@@ -30,18 +30,18 @@ func TestInvoiceServer_CreateInvoice(t *testing.T) {
 			request: &pb.InvoiceRequest{
 				CompanyId:      1,
 				ClientId:       2,
-				IssueDate:      timestamppb.New(now),
+				IssueDate:      timestamppb.New(now.Truncate(time.Hour * 24 * 3)),
 				InvoiceAmount:  1000,
 				Status:         pb.InvoiceStatus_UNPAID,
-				PaymentDueDate: timestamppb.New(now),
+				PaymentDueDate: timestamppb.New(now.Add(time.Hour * 24 * 5)),
 			},
 			want: &pb.InvoiceResponse{
 				Invoice: &pb.Invoice{
 					Id:             wrapperspb.UInt64(1),
-					IssueDate:      timestamppb.New(now),
+					IssueDate:      timestamppb.New(now.Truncate(time.Hour * 24 * 3)),
 					InvoiceAmount:  1000,
 					Status:         pb.InvoiceStatus_UNPAID,
-					PaymentDueDate: timestamppb.New(now),
+					PaymentDueDate: timestamppb.New(now.Add(time.Hour * 24 * 5)),
 					Company: &pb.Company{
 						Id:             wrapperspb.UInt64(1),
 						Name:           "test",
@@ -69,10 +69,10 @@ func TestInvoiceServer_CreateInvoice(t *testing.T) {
 			request: &pb.InvoiceRequest{
 				CompanyId:      1,
 				ClientId:       2,
-				IssueDate:      timestamppb.New(now),
+				IssueDate:      timestamppb.New(now.Truncate(time.Hour * 24 * 3)),
 				InvoiceAmount:  1000,
 				Status:         pb.InvoiceStatus_UNPAID,
-				PaymentDueDate: timestamppb.New(now),
+				PaymentDueDate: timestamppb.New(now.Add(time.Hour * 24 * 5)),
 			},
 			want:    nil,
 			wantErr: true,
@@ -150,8 +150,8 @@ func TestInvoiceServer_GetInvoicesByDateRange(t *testing.T) {
 		{
 			name: "normal case",
 			request: &pb.DateRangeRequest{
-				StartDate: timestamppb.New(time.Now()),
-				EndDate:   timestamppb.New(time.Now().Add(time.Hour * 24 * 5)),
+				StartDate: timestamppb.New(time.Now().Truncate(time.Hour * 24 * 10)),
+				EndDate:   timestamppb.New(time.Now().Truncate(time.Hour * 24 * 5)),
 			},
 			want: &pb.InvoicesResponse{
 				Invoices: []*pb.Invoice{
@@ -212,8 +212,8 @@ func TestInvoiceServer_GetInvoicesByDateRange(t *testing.T) {
 		{
 			name: "error",
 			request: &pb.DateRangeRequest{
-				StartDate: timestamppb.New(time.Now()),
-				EndDate:   timestamppb.New(time.Now().Add(time.Hour * 24 * 5)),
+				StartDate: timestamppb.New(time.Now().Truncate(time.Hour * 24 * 10)),
+				EndDate:   timestamppb.New(time.Now().Truncate(time.Hour * 24 * 5)),
 			},
 			want:    nil,
 			wantErr: true,
