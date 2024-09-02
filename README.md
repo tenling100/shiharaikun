@@ -18,6 +18,33 @@ ShiharaiKun is a Go-based application designed to manage invoice data for future
 - Go 1.16+ installed (for local development)
 - Docker and Docker Compose installed
 
+## Testing
+
+### Testing with Docker Compose
+
+1. **Start Services:**
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Run Test Script:**
+   Navigate to the `test/` directory and run the desired test script:
+   ```bash
+   sh test/<script-name>.sh
+   ```
+   Replace `<script-name>` with the actual name of the script you want to run. Ensure that the test scripts are executable and properly configured with the necessary environment.
+   File starting with curl is http call, another is curl call.
+
+   **Please Noted that you need to create company and client before you create invoice.**
+
+### Running Go Tests
+
+Run the Go tests using the following command:
+
+```bash
+go test ./...
+```
+
 ## Installation
 
 1. **Clone the Repository:**
@@ -118,33 +145,6 @@ make compose-down
    make build-server
    go run cmd/main.go
    ```
-
-## Testing
-
-### Testing with Docker Compose
-
-1. **Start Services:**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Run Test Script:**
-   Navigate to the `test/` directory and run the desired test script:
-   ```bash
-   sh test/<script-name>.sh
-   ```
-   Replace `<script-name>` with the actual name of the script you want to run. Ensure that the test scripts are executable and properly configured with the necessary environment.
-   File starting with curl is http call, another is curl call.
-
-   **Please Noted that you need to create company and client before you create invoice.**
-
-### Running Go Tests
-
-Run the Go tests using the following command:
-
-```bash
-go test ./...
-```
 
 ## Contributing
 
