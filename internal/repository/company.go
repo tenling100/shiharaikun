@@ -28,8 +28,3 @@ func (r *companyRepository) GetCompanyByID(id uint) (*domain.Company, error) {
 	}
 	return &company, nil
 }
-
-// UpdateCompany updates a company.
-func (r *companyRepository) UpdateCompany(company *domain.Company) error {
-	return r.db.Save(company).Error
-}

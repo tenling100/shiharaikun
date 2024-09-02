@@ -9,6 +9,7 @@ import (
 type Env struct {
 	// Env is the environment of the application.
 	GRPCPort string  `envconfig:"GRPC_PORT" default:"50051"`
+	HTTPPort string  `envconfig:"HTTP_PORT" default:"8080"`
 	DBHost   string  `envconfig:"DB_HOST" default:"localhost"`
 	DBPort   string  `envconfig:"DB_PORT" default:"3306"`
 	DBUser   string  `envconfig:"DB_USER" default:"testuser"`

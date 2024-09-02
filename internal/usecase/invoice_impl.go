@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/tenling100/shiharaikun/internal/config"
@@ -34,9 +35,9 @@ func (u *invoiceUsecaseImpl) CreateInvoice(invoice *domain.InvoiceData) error {
 	// calculate fee and tax
 	invoice.FeeRate = u.env.FeeRate
 	invoice.TaxRate = u.env.TaxRate
-	invoice.Fee = math.Round(invoice.InvoiceAmount * invoice.FeeRate)
-	invoice.Tax = math.Round(invoice.InvoiceAmount * invoice.TaxRate)
-	invoice.PaymentAmount = invoice.InvoiceAmount + invoice.Fee + invoice.Tax
+	invoice.Fee = (invoice.InvoiceAmount * invoice.FeeRate)
+	invoice.Tax = (invoice.InvoiceAmount * invoice.TaxRate)
+	invoice.PaymentAmount = math.Ceil(invoice.InvoiceAmount + invoice.Fee + invoice.Tax)
 	company, err := u.companyRepository.GetCompanyByID(invoice.CompanyID)
 	if err != nil {
 		return err
@@ -61,6 +62,10 @@ func (u *invoiceUsecaseImpl) GetInvoicesByDateRange(startDate, endDate string) (
 	if err != nil {
 		return nil, err
 	}
+	if len(invoices) == 0 {
+		return nil, fmt.Errorf("no invoices found")
+	}
+
 	for i := range invoices {
 		company, err := u.companyRepository.GetCompanyByID(invoices[i].CompanyID)
 		if err != nil {

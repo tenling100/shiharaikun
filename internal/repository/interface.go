@@ -12,7 +12,6 @@ type UserRepository interface {
 type CompanyRepository interface {
 	CreateCompany(company *domain.Company) error
 	GetCompanyByID(id uint) (*domain.Company, error)
-	UpdateCompany(company *domain.Company) error
 }
 
 type InvoiceDataRepository interface {

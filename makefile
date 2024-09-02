@@ -1,12 +1,13 @@
 ## proto configuration
 # Makefile for generating Go code from Protobuf files
-PROTO_SRC_DIR := proto
+PROTO_SRC_DIR := ./proto
 PROTO_DST_DIR := ./api
 
 # Define the protobuf compiler and Go plugin paths
 PROTOC := protoc
 PROTOC_GEN_GO := $(shell go env GOPATH)/bin/protoc-gen-go
 PROTOC_GEN_GO_GRPC := $(shell go env GOPATH)/bin/protoc-gen-go-grpc
+GOOGLE_APIS_PATH := ./third_party/googleapis
 
 # List all the proto files to compile
 PROTO_FILES := $(wildcard $(PROTO_SRC_DIR)/*.proto)
@@ -42,12 +43,14 @@ DB_HOST = 127.0.0.1
 DB_PORT = 3306
 
 # Generate Go code from proto files
-generate: $(PROTO_FILES)
+.PHONY: proto
+proto: 
 	@for proto in $(PROTO_FILES); do \
 		echo "Generating Go code for $$proto"; \
-		$(PROTOC) --plugin=protoc-gen-go=$(PROTOC_GEN_GO) --plugin=protoc-gen-go-grpc=$(PROTOC_GEN_GO_GRPC) \
-				  --go_out=module=github.com/tenling100/shiharaikun/api:$(PROTO_DST_DIR) \
-				  --go-grpc_out=module=github.com/tenling100/shiharaikun/api:$(PROTO_DST_DIR) \
+		$(PROTOC) -I=$(PROTO_SRC_DIR) -I=$(GOOGLE_APIS_PATH) \
+		          --go_out=$(PROTO_DST_DIR) --go_opt=paths=source_relative \
+		          --go-grpc_out=$(PROTO_DST_DIR) --go-grpc_opt=paths=source_relative \
+		          --grpc-gateway_out=$(PROTO_DST_DIR) --grpc-gateway_opt=paths=source_relative \
 		          $$proto; \
 	done
 
@@ -59,8 +62,10 @@ proto-fmt:
 # Install required tools
 install-tools:
 	@echo "Installing Protobuf tools"
-	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 
 
 # Start the MySQL service using Docker Compose

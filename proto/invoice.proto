@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package invoice;
 
+import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -9,10 +10,30 @@ option go_package = "github.com/tenling100/shiharaikun/api";
 
 // Invoice service definitions
 service InvoiceService {
-  rpc CreateInvoice(InvoiceRequest) returns (InvoiceResponse);
-  rpc GetInvoicesByDateRange(DateRangeRequest) returns (InvoicesResponse);
-  rpc CreateCompany(company) returns (company);
-  rpc CreateUser(user) returns (user);
+  rpc CreateInvoice(InvoiceRequest) returns (InvoiceResponse) {
+    option (google.api.http) = {
+      post: "/invoice"
+      body: "*"
+    };
+  }
+  rpc GetInvoicesByDateRange(DateRangeRequest) returns (InvoicesResponse) {
+    option (google.api.http) = {
+      post: "/invoices/date-range"
+      body: "*"
+    };
+  }
+  rpc CreateCompany(company) returns (company) {
+    option (google.api.http) = {
+      post: "/company"
+      body: "*"
+    };
+  }
+  rpc CreateUser(user) returns (user) {
+    option (google.api.http) = {
+      post: "/user"
+      body: "*"
+    };
+  }
 }
 
 // invoice status enum
