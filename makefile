@@ -146,7 +146,7 @@ docker-stop:
 # Start services using Docker Compose
 compose-up:
 	@echo "Starting services with Docker Compose..."
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) up -d --build
 	@echo "Services started."
 
 # Stop services using Docker Compose
