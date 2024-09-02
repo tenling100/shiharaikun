@@ -18,6 +18,7 @@ COPY . .
 
 # Build the Go app
 RUN make build-server
+RUN make build-migrate
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
@@ -25,9 +26,15 @@ EXPOSE 50051
 
 # Copy the wait-for-mysql script into the container
 COPY wait-for-mysql.sh /wait-for-mysql.sh
+COPY entrypoint.sh /entrypoint.sh
 
-# Make the wait-for-mysql script executable
-RUN chmod +x /wait-for-mysql.sh
+# Make the scripts executable
+RUN chmod +x /wait-for-mysql.sh /entrypoint.sh migrate
+
+# Command to run the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
+
+
 
 # Command to run the executable
-CMD ["/wait-for-mysql.sh", "./server"]
+CMD ["./server"]

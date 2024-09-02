@@ -9,7 +9,8 @@ ShiharaiKun is a Go-based application designed to manage invoice data for future
 - REST API for managing invoices.
 - Database interaction using GORM.
 - Testing database operations with `sqlmock`.
-- gRPC server for additional functionalities.
+- gRPC server for additional functionalities. (port 50051)
+- http server for additional functionalities. (port 8080)
 - Environment-based configuration management.
 
 ## Prerequisites
@@ -55,7 +56,7 @@ ShiharaiKun is a Go-based application designed to manage invoice data for future
 
 ### Reset DB
 ``` bash
-make reset-db
+make renew-db
 ```
 
 ## Generate Proto
@@ -87,13 +88,19 @@ To generate the protobuf files, follow these steps:
 
 1. **Build and Run Services with Docker Compose:**
    ```bash
-   docker-compose up --build
+   make compose-up
    ```
 
    This command will build the necessary images and start the services defined in the `docker-compose.yml` file, including the database and the application server.
+   Every time build been running will auto migrate DB with gorm model.
 
 2. **Accessing the Application:**
    Once Docker Compose has started all services, the application will be accessible. Check the logs for the specific port it's running on or refer to the `docker-compose.yml` for configuration.
+
+3. **Close**
+```bash
+make compose-down
+```
 
 ### Manually
 
@@ -108,6 +115,7 @@ To generate the protobuf files, follow these steps:
 
 3. **Start the Application:**
    ```bash
+   make build-server
    go run cmd/main.go
    ```
 
@@ -120,18 +128,13 @@ To generate the protobuf files, follow these steps:
    docker-compose up --build
    ```
 
-2. **Run Database Migrations (if needed):**
-   If the database schema needs to be updated or initialized, run:
-   ```bash
-   make migrate-db
-   ```
-
-3. **Run Test Script:**
+2. **Run Test Script:**
    Navigate to the `test/` directory and run the desired test script:
    ```bash
    sh test/<script-name>.sh
    ```
    Replace `<script-name>` with the actual name of the script you want to run. Ensure that the test scripts are executable and properly configured with the necessary environment.
+   File starting with curl is http call, another is curl call.
 
 ### Running Go Tests
 
