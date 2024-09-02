@@ -51,9 +51,7 @@ func Test_companyUsecase_CreateCompany(t *testing.T) {
 				// no error
 				mockCompanyRepository.EXPECT().CreateCompany(tt.input).Return(nil)
 			}
-			u := &companyUsecase{
-				companyRepository: mockCompanyRepository,
-			}
+			u := NewCompanyUsecaseImpl(mockCompanyRepository)
 			if err := u.CreateCompany(tt.input); (err != nil) != tt.wantErr {
 				t.Errorf("companyUsecase.CreateCompany() error = %v, wantErr %v", err, tt.wantErr)
 			}
