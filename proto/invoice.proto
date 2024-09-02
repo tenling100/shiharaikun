@@ -12,25 +12,24 @@ option go_package = "github.com/tenling100/shiharaikun/api";
 service InvoiceService {
   rpc CreateInvoice(InvoiceRequest) returns (InvoiceResponse) {
     option (google.api.http) = {
-      post: "/invoice"
+      post: "/api/invoice"
       body: "*"
     };
   }
   rpc GetInvoicesByDateRange(DateRangeRequest) returns (InvoicesResponse) {
     option (google.api.http) = {
-      post: "/invoices/date-range"
-      body: "*"
+      get: "/api/invoices"
     };
   }
   rpc CreateCompany(company) returns (company) {
     option (google.api.http) = {
-      post: "/company"
+      post: "/api/company"
       body: "*"
     };
   }
   rpc CreateUser(user) returns (user) {
     option (google.api.http) = {
-      post: "/user"
+      post: "/api/user"
       body: "*"
     };
   }
@@ -90,17 +89,16 @@ message user {
 message Invoice {
   google.protobuf.UInt64Value id = 1;
   company company = 2;
-  user creator = 3;
-  company client = 4;
-  google.protobuf.Timestamp issue_date = 5;
-  float payment_amount = 6;
-  float fee = 7;
-  float fee_rate = 8;
-  float tax = 9;
-  float tax_rate = 10;
-  float invoice_amount = 11;
-  google.protobuf.Timestamp payment_due_date = 12;
-  InvoiceStatus status = 13;
-  google.protobuf.Timestamp created_at = 14;
-  google.protobuf.Timestamp updated_at = 15;
+  company client = 3;
+  google.protobuf.Timestamp issue_date = 4;
+  float payment_amount = 5;
+  float fee = 6;
+  float fee_rate = 7;
+  float tax = 8;
+  float tax_rate = 9;
+  float invoice_amount = 10;
+  google.protobuf.Timestamp payment_due_date = 11;
+  InvoiceStatus status = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
 }

@@ -2,6 +2,8 @@ package grpc
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
@@ -30,6 +32,15 @@ func NewInvoiceServer(
 }
 
 func (s *InvoiceServer) CreateInvoice(ctx context.Context, in *pb.InvoiceRequest) (*pb.InvoiceResponse, error) {
+	if in.IssueDate.AsTime().After(time.Now()) {
+		return nil, fmt.Errorf("issue date must be in the past")
+	}
+	if in.PaymentDueDate.AsTime().Before(time.Now()) {
+		return nil, fmt.Errorf("payment due date must be in the future")
+	}
+	if in.InvoiceAmount <= 0 {
+		return nil, fmt.Errorf("invoice amount must be greater than 0")
+	}
 	invoice := &domain.InvoiceData{
 		CompanyID:      uint(in.CompanyId),
 		ClientID:       uint(in.ClientId),
@@ -50,6 +61,12 @@ func (s *InvoiceServer) CreateInvoice(ctx context.Context, in *pb.InvoiceRequest
 }
 
 func (s *InvoiceServer) GetInvoicesByDateRange(ctx context.Context, in *pb.DateRangeRequest) (*pb.InvoicesResponse, error) {
+	if in.StartDate.AsTime().After(time.Now()) || in.EndDate.AsTime().After(time.Now()) {
+		return nil, fmt.Errorf("start date and end date must be in the past")
+	}
+	if in.StartDate.AsTime().After(in.EndDate.AsTime()) {
+		return nil, fmt.Errorf("start date must be before end date")
+	}
 	invoices, err := s.invoiceUsecase.GetInvoicesByDateRange(in.StartDate.AsTime().String(), in.EndDate.AsTime().String())
 	if err != nil {
 		return nil, err

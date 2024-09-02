@@ -40,10 +40,16 @@ func (u *invoiceUsecaseImpl) CreateInvoice(invoice *domain.InvoiceData) error {
 	invoice.PaymentAmount = math.Ceil(invoice.InvoiceAmount + invoice.Fee + invoice.Tax)
 	company, err := u.companyRepository.GetCompanyByID(invoice.CompanyID)
 	if err != nil {
+		if err.Error() == "record not found" {
+			return fmt.Errorf("company not found, please create company before creating invoice, %v", err)
+		}
 		return err
 	}
 	client, err := u.companyRepository.GetCompanyByID(invoice.ClientID)
 	if err != nil {
+		if err.Error() == "record not found" {
+			return fmt.Errorf("client not found, please create client before creating invoice, %v", err)
+		}
 		return err
 	}
 	invoice.Company = company

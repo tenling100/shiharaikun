@@ -57,11 +57,18 @@ func local_request_InvoiceService_CreateInvoice_0(ctx context.Context, marshaler
 
 }
 
+var (
+	filter_InvoiceService_GetInvoicesByDateRange_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
 func request_InvoiceService_GetInvoicesByDateRange_0(ctx context.Context, marshaler runtime.Marshaler, client InvoiceServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DateRangeRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_InvoiceService_GetInvoicesByDateRange_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -74,7 +81,10 @@ func local_request_InvoiceService_GetInvoicesByDateRange_0(ctx context.Context, 
 	var protoReq DateRangeRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_InvoiceService_GetInvoicesByDateRange_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -150,7 +160,7 @@ func RegisterInvoiceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/CreateInvoice", runtime.WithHTTPPathPattern("/invoice"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/CreateInvoice", runtime.WithHTTPPathPattern("/api/invoice"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -167,7 +177,7 @@ func RegisterInvoiceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("POST", pattern_InvoiceService_GetInvoicesByDateRange_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_InvoiceService_GetInvoicesByDateRange_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -175,7 +185,7 @@ func RegisterInvoiceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/GetInvoicesByDateRange", runtime.WithHTTPPathPattern("/invoices/date-range"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/GetInvoicesByDateRange", runtime.WithHTTPPathPattern("/api/invoices"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -200,7 +210,7 @@ func RegisterInvoiceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/CreateCompany", runtime.WithHTTPPathPattern("/company"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/CreateCompany", runtime.WithHTTPPathPattern("/api/company"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -225,7 +235,7 @@ func RegisterInvoiceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/CreateUser", runtime.WithHTTPPathPattern("/user"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/invoice.InvoiceService/CreateUser", runtime.WithHTTPPathPattern("/api/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -289,7 +299,7 @@ func RegisterInvoiceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/CreateInvoice", runtime.WithHTTPPathPattern("/invoice"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/CreateInvoice", runtime.WithHTTPPathPattern("/api/invoice"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -305,13 +315,13 @@ func RegisterInvoiceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("POST", pattern_InvoiceService_GetInvoicesByDateRange_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_InvoiceService_GetInvoicesByDateRange_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/GetInvoicesByDateRange", runtime.WithHTTPPathPattern("/invoices/date-range"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/GetInvoicesByDateRange", runtime.WithHTTPPathPattern("/api/invoices"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -333,7 +343,7 @@ func RegisterInvoiceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/CreateCompany", runtime.WithHTTPPathPattern("/company"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/CreateCompany", runtime.WithHTTPPathPattern("/api/company"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -355,7 +365,7 @@ func RegisterInvoiceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/CreateUser", runtime.WithHTTPPathPattern("/user"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/invoice.InvoiceService/CreateUser", runtime.WithHTTPPathPattern("/api/user"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -375,13 +385,13 @@ func RegisterInvoiceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_InvoiceService_CreateInvoice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"invoice"}, ""))
+	pattern_InvoiceService_CreateInvoice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "invoice"}, ""))
 
-	pattern_InvoiceService_GetInvoicesByDateRange_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"invoices", "date-range"}, ""))
+	pattern_InvoiceService_GetInvoicesByDateRange_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "invoices"}, ""))
 
-	pattern_InvoiceService_CreateCompany_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"company"}, ""))
+	pattern_InvoiceService_CreateCompany_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "company"}, ""))
 
-	pattern_InvoiceService_CreateUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"user"}, ""))
+	pattern_InvoiceService_CreateUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "user"}, ""))
 )
 
 var (

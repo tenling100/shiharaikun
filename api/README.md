@@ -53,7 +53,6 @@
 | ----- | ---- | ----- | ----------- |
 | id | [google.protobuf.UInt64Value](#google-protobuf-UInt64Value) |  |  |
 | company | [company](#invoice-company) |  |  |
-| creator | [user](#invoice-user) |  |  |
 | client | [company](#invoice-company) |  |  |
 | issue_date | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 | payment_amount | [float](#float) |  |  |
