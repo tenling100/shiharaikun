@@ -58,6 +58,8 @@ func ConvertToInvoiceData(invoice *InvoiceData) *pb.Invoice {
 		InvoiceAmount:  float32(invoice.InvoiceAmount),
 		PaymentDueDate: timestamppb.New(invoice.PaymentDueDate),
 		Status:         pb.InvoiceStatus(pb.InvoiceStatus_value[invoice.Status]),
+		CreatedAt:      timestamppb.New(invoice.CreatedAt),
+		UpdatedAt:      timestamppb.New(invoice.UpdatedAt),
 	}
 
 }

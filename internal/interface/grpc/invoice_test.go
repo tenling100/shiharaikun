@@ -58,6 +58,8 @@ func TestInvoiceServer_CreateInvoice(t *testing.T) {
 						PostalCode:     "test",
 						Address:        "test",
 					},
+					CreatedAt: timestamppb.New(now),
+					UpdatedAt: timestamppb.New(now),
 				},
 			},
 			wantErr: false,
@@ -114,6 +116,8 @@ func TestInvoiceServer_CreateInvoice(t *testing.T) {
 							PostalCode:     "test",
 							Address:        "test",
 						}
+						invoice.CreatedAt = now
+						invoice.UpdatedAt = now
 					}).
 					Return(nil)
 			}
@@ -173,6 +177,8 @@ func TestInvoiceServer_GetInvoicesByDateRange(t *testing.T) {
 							PostalCode:     "test",
 							Address:        "test",
 						},
+						CreatedAt: timestamppb.New(time.Now()),
+						UpdatedAt: timestamppb.New(time.Now()),
 					},
 					{
 						Id:             wrapperspb.UInt64(2),
@@ -196,6 +202,8 @@ func TestInvoiceServer_GetInvoicesByDateRange(t *testing.T) {
 							PostalCode:     "test",
 							Address:        "test",
 						},
+						CreatedAt: timestamppb.New(time.Now()),
+						UpdatedAt: timestamppb.New(time.Now()),
 					},
 				},
 			},
@@ -246,6 +254,8 @@ func TestInvoiceServer_GetInvoicesByDateRange(t *testing.T) {
 							PostalCode:     invoicepb.Client.PostalCode,
 							Address:        invoicepb.Client.Address,
 						},
+						CreatedAt: invoicepb.CreatedAt.AsTime(),
+						UpdatedAt: invoicepb.UpdatedAt.AsTime(),
 					}
 					invoices = append(invoices, invoice)
 				}

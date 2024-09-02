@@ -102,15 +102,10 @@ clean:
 	@echo "Test environment cleaned."
 
 # Run tests
+.PHONY: test
 test:
-	@echo "Running tests..."
-	# Ensure the DB is up
-	make start-db
 	# Run tests
 	go test ./... -v
-	# Stop the DB after tests
-	make stop-db
-	@echo "Tests completed."
 
 # build the binary
 build-server:
