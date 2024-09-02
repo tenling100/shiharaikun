@@ -136,6 +136,8 @@ make compose-down
    Replace `<script-name>` with the actual name of the script you want to run. Ensure that the test scripts are executable and properly configured with the necessary environment.
    File starting with curl is http call, another is curl call.
 
+   **Please Noted that you need to create company and client before you create invoice.**
+
 ### Running Go Tests
 
 Run the Go tests using the following command:
