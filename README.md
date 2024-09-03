@@ -24,7 +24,7 @@ ShiharaiKun is a Go-based application designed to manage invoice data for future
 
 1. **Start Services:**
    ```bash
-   docker-compose up --build
+   make compose-up
    ```
 
 2. **Run Test Script:**
